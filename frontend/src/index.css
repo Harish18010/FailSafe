@@ -1,0 +1,16 @@
+@import "tailwindcss";
+
+body {
+  background-color: #0f1011; /* Very dark charcoal */
+  color: #f3f4f6;
+  font-family: 'Inter', sans-serif;
+}
+
+.card-bg {
+  background-color: #1a1b1e;
+  border: 1px solid #2c2e33;
+}
+
+.sidebar-bg {
+  background-color: #141517;
+}
