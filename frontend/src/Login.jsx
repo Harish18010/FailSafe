@@ -17,7 +17,8 @@ export default function Login({ setToken }) {
       formData.append('username', username);
       formData.append('password', password);
       
-      const response = await axios.post('http://127.0.0.1:8000/token', formData, {
+      const API = import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000';
+      const response = await axios.post(`${API}/token`, formData, {
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
       });
       
