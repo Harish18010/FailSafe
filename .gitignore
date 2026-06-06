@@ -6,10 +6,6 @@ __pycache__/
 .Python
 .env
 *.db
-models/*.pkl
-models/*.json
-models/*.png
-models/*.html
 node_modules/
 dist/
 build/
