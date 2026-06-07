@@ -55,7 +55,7 @@ FAILSAFE allows faculty to upload student datasets, get instant at-risk predicti
 ```
 FailSafe/
 ├── data/                   # Dataset (not tracked — see Setup)
-├── models/                 # Trained model artifacts (not tracked — see Setup)
+├── models/                 # Trained model artifacts (included in repo)
 ├── src/
 │   ├── api/                # FastAPI backend
 │   │   ├── main.py
@@ -96,15 +96,15 @@ Download the UCI Student Performance dataset from Kaggle and place it at `data/s
 
 [https://www.kaggle.com/datasets/larsen0966/student-performance-data-set](https://www.kaggle.com/datasets/larsen0966/student-performance-data-set)
 
-### 3. Train the model
+### 3. Train the model (optional)
+
+Trained model artifacts are already included in the `models/` folder. You only need to retrain if you want to experiment with different hyperparameters:
 
 ```bash
 cd src/ml
 pip install -r ../api/requirements.txt
 python trainer.py
 ```
-
-This generates the model artifacts in the `models/` folder.
 
 ### 4. Configure environment
 
@@ -133,7 +133,11 @@ docker-compose exec db psql -U failsafe_admin -d failsafe_production -c "ALTER T
 
 ### 6. Access the app
 
-Once Docker is running, the frontend and API will be available on your machine. 
+Once Docker is running open your browser and go to:
+
+- **Frontend:** `http://localhost:5173`
+- **API Docs:** `http://localhost:8000/docs`
+
 **Default credentials:** `faculty_admin` / `securepassword123`
 
 ---
@@ -166,4 +170,4 @@ Once Docker is running, the frontend and API will be available on your machine.
 
 ---
 
-The project is done for educational purposes only.
+*Built for educational purposes.*
