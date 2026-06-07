@@ -133,8 +133,7 @@ docker-compose exec db psql -U failsafe_admin -d failsafe_production -c "ALTER T
 
 ### 6. Access the app
 
-Once Docker is running, the frontend and API will be available on your machine. A live deployed version will be linked here shortly.
-
+Once Docker is running, the frontend and API will be available on your machine. 
 **Default credentials:** `faculty_admin` / `securepassword123`
 
 ---
