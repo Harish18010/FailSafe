@@ -170,4 +170,4 @@ Once Docker is running open your browser and go to:
 
 ---
 
-*Built for educational purposes.*
+*Built for educational purposes*
