@@ -158,7 +158,7 @@ Once Docker is running open your browser and go to:
 
 ## How It Works
 
-**Data Loading** — Grade trend features (`G2-G1`, mid-term average) are engineered before encoding. `OrdinalEncoder` is fit only on training data to prevent leakage.
+**Data Loading** — Grade trend features (`G2-G1`, mid-term average) are engineered before encoding. `OrdinalEncoder` is fit only on  training data to prevent leakage.
 
 **Training** — XGBoost with SMOTE oversampling, manual 5-fold CV across 60 random hyperparameter combinations, and data-driven threshold calibration via Youden's J statistic.
 
