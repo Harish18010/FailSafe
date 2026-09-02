@@ -1,58 +1,58 @@
 # FAILSAFE — Student At-Risk Early Warning System
 
-A full-stack, AI-powered web application that predicts student failure risk before end-of-semester results, explains predictions using Explainable AI, and auto-generates personalised intervention plans for faculty.
+A full-stack, AI-powered web application designed to identify students at risk of academic failure before end-of-semester results are released, explain the factors behind each prediction using Explainable AI, and generate personalised intervention plans for faculty.
 
 ---
 
 ## The Problem
 
-In educational institutions, student failure often goes undetected until final grades are released — leaving no room for meaningful intervention. Faculty lack a proactive, data-driven tool to identify struggling students early and understand the root causes behind their performance.
+In educational institutions, students at risk of failing are often identified only after final grades are released, leaving limited opportunity for meaningful intervention. Faculty need a proactive, data-driven system that can identify struggling students early while also providing insight into the factors contributing to their academic risk.
 
 ## The Solution
 
-FAILSAFE allows faculty to upload student datasets, get instant at-risk predictions with transparent SHAP explanations, and generate AI-powered intervention plans — all before it's too late.
+FAILSAFE enables faculty to upload student datasets, obtain instant risk predictions with transparent SHAP-based explanations, analyse cohort-level trends, and generate AI-assisted intervention plans — allowing action to be taken before final outcomes are determined.
 
 ---
 
 ## Key Metrics
 
-| Metric | Value |
-|--------|-------|
-| CV ROC-AUC | 0.985 |
-| Test ROC-AUC | 0.970 |
-| At-Risk Recall | 92.3% |
-| Accuracy | 89.9% |
-| At-Risk Precision | 80.0% |
+| Metric                         | Value        |
+| ------------------------------ | ------------ |
+| CV ROC-AUC                     | 0.985        |
+| Test ROC-AUC                   | 0.970        |
+| At-Risk Recall                 | 92.3%        |
+| Accuracy                       | 89.9%        |
+| At-Risk Precision              | 80.0%        |
 | Batch Processing (10k records) | ~2.1 seconds |
 
 ---
 
 ## Features
 
-- **Batch Prediction Pipeline** — Upload a CSV; the system runs vectorised ML inference, SHAP analysis, and rule-based intervention flags with a single bulk DB insert
-- **Explainable AI** — Per-student SHAP bar charts show exactly which features drive the risk prediction
-- **AI Intervention Plans** — Gemini 2.5 Flash generates personalised, structured plans per flagged student based on their SHAP risk drivers
-- **Intervention Tracking** — Faculty can mark students as actioned with timestamp and username audit trail
-- **Cohort Analytics** — Batch-level risk distribution and top risk drivers across the cohort
-- **Batch History** — Full audit trail of all past prediction runs stored in PostgreSQL
-- **JWT Authentication** — Secure session management with auto-logout on token expiry
+* **Batch Prediction Pipeline** — Upload a CSV and process the entire cohort through vectorised ML inference, SHAP analysis, and rule-based intervention flags, followed by a single bulk database insert.
+* **Explainable AI** — Per-student SHAP visualisations highlight the features that contribute most strongly to each risk prediction.
+* **AI-Generated Intervention Plans** — Gemini 2.5 Flash generates personalised, structured intervention plans for flagged students using their risk score, SHAP drivers, and intervention flags.
+* **Intervention Tracking** — Faculty can mark students as actioned, with timestamps and usernames recorded for auditability.
+* **Cohort Analytics** — Analyse batch-level risk distributions and identify the most influential risk drivers across an entire cohort.
+* **Batch History** — Maintains a complete history of previous prediction runs in PostgreSQL for tracking and auditing.
+* **JWT Authentication** — Secure authentication and session management with automatic logout when tokens expire.
 
 ---
 
 ## Tech Stack
 
-| Layer | Technologies |
-|-------|-------------|
+| Layer            | Technologies                                                                 |
+| ---------------- | ---------------------------------------------------------------------------- |
 | Machine Learning | Python, XGBoost, scikit-learn, SHAP, SMOTE (imbalanced-learn), Pandas, NumPy |
-| Backend | FastAPI, SQLAlchemy, PostgreSQL, Google Gemini 2.5 Flash, JWT Auth |
-| Frontend | React.js, Tailwind CSS, Recharts, Axios |
-| Infrastructure | Docker, Docker Compose |
+| Backend          | FastAPI, SQLAlchemy, PostgreSQL, Google Gemini 2.5 Flash, JWT Auth           |
+| Frontend         | React.js, Tailwind CSS, Recharts, Axios                                      |
+| Infrastructure   | Docker, Docker Compose                                                       |
 
 ---
 
 ## Project Structure
 
-```
+```text
 FailSafe/
 ├── data/                   # Dataset (not tracked — see Setup)
 ├── models/                 # Trained model artifacts (included in repo)
@@ -79,26 +79,33 @@ FailSafe/
 ## Setup & Installation
 
 ### Prerequisites
-- Docker and Docker Compose
-- Python 3.10+
-- Gemini API Key — get one free at [aistudio.google.com](https://aistudio.google.com/app/apikey)
 
-### 1. Clone the repository
+* Docker and Docker Compose
+* Python 3.10+
+* Gemini API Key — available from [Google AI Studio](https://aistudio.google.com/app/apikey)
+
+### 1. Clone the Repository
 
 ```bash
 git clone https://github.com/Harish18010/FailSafe.git
 cd FailSafe
 ```
 
-### 2. Download the dataset
+### 2. Download the Dataset
 
-Download the UCI Student Performance dataset from Kaggle and place it at `data/student_data.csv`:
+Download the UCI Student Performance dataset from Kaggle and place it at:
 
-[https://www.kaggle.com/datasets/larsen0966/student-performance-data-set](https://www.kaggle.com/datasets/larsen0966/student-performance-data-set)
+```text
+data/student_data.csv
+```
 
-### 3. Train the model (optional)
+Dataset:
 
-Trained model artifacts are already included in the `models/` folder. You only need to retrain if you want to experiment with different hyperparameters:
+https://www.kaggle.com/datasets/larsen0966/student-performance-data-set
+
+### 3. Train the Model (Optional)
+
+Pre-trained model artifacts are already included in the `models/` directory. Retraining is only required if you want to experiment with the training pipeline or different hyperparameters.
 
 ```bash
 cd src/ml
@@ -106,16 +113,17 @@ pip install -r ../api/requirements.txt
 python trainer.py
 ```
 
-### 4. Configure environment
+### 4. Configure Environment Variables
 
 Create a `.env` file in the project root:
 
-```
+```env
 GEMINI_API_KEY=your_gemini_api_key_here
 SECRET_KEY=your_random_secret_key_here
 ```
 
-Generate a secret key with:
+Generate a secure secret key using:
+
 ```bash
 python -c "import secrets; print(secrets.token_hex(32))"
 ```
@@ -126,17 +134,18 @@ python -c "import secrets; print(secrets.token_hex(32))"
 docker-compose up -d --build
 ```
 
-Run the DB migration once after first startup:
+After the first startup, run the database migration once:
+
 ```bash
 docker-compose exec db psql -U failsafe_admin -d failsafe_production -c "ALTER TABLE predictions ADD COLUMN IF NOT EXISTS actioned BOOLEAN DEFAULT FALSE; ALTER TABLE predictions ADD COLUMN IF NOT EXISTS actioned_by VARCHAR; ALTER TABLE predictions ADD COLUMN IF NOT EXISTS actioned_at TIMESTAMPTZ; ALTER TABLE predictions ADD COLUMN IF NOT EXISTS created_at TIMESTAMPTZ DEFAULT NOW();"
 ```
 
-### 6. Access the app
+### 6. Access the Application
 
-Once Docker is running open your browser and go to:
+Once the Docker containers are running:
 
-- **Frontend:** `http://localhost:5173`
-- **API Docs:** `http://localhost:8000/docs`
+* **Frontend:** `http://localhost:5173`
+* **API Documentation:** `http://localhost:8000/docs`
 
 **Default credentials:** `faculty_admin` / `securepassword123`
 
@@ -144,30 +153,59 @@ Once Docker is running open your browser and go to:
 
 ## API Endpoints
 
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| POST | `/token` | Login and get JWT token |
-| GET | `/health` | Model and API health check |
-| POST | `/predict/batch` | Upload CSV and run batch prediction |
-| GET | `/predict/history` | Get all past prediction records |
-| POST | `/predict/action/{student_id}` | Mark student intervention as actioned |
-| POST | `/predict/unaction/{student_id}` | Reverse action status |
-| POST | `/agent/draft-intervention` | Generate AI intervention plan |
+| Method | Endpoint                         | Description                               |
+| ------ | -------------------------------- | ----------------------------------------- |
+| POST   | `/token`                         | Authenticate and obtain a JWT token       |
+| GET    | `/health`                        | Check API and model health                |
+| POST   | `/predict/batch`                 | Upload a CSV and run batch predictions    |
+| GET    | `/predict/history`               | Retrieve previous prediction records      |
+| POST   | `/predict/action/{student_id}`   | Mark a student intervention as actioned   |
+| POST   | `/predict/unaction/{student_id}` | Reverse a student's action status         |
+| POST   | `/agent/draft-intervention`      | Generate an AI-assisted intervention plan |
 
 ---
 
 ## How It Works
 
-**Data Loading** — Grade trend features (`G2-G1`, mid-term average) are engineered before encoding. `OrdinalEncoder` is fit only on  training data to prevent leakage.
+**Data Loading & Feature Engineering** — Grade-trend features such as `G2-G1` and the mid-term average are engineered before encoding. The `OrdinalEncoder` is fit exclusively on the training data to prevent data leakage.
 
-**Training** — XGBoost with SMOTE oversampling, manual 5-fold CV across 60 random hyperparameter combinations, and data-driven threshold calibration via Youden's J statistic.
+**Model Training** — XGBoost is trained with SMOTE oversampling to address class imbalance. Model selection uses manual 5-fold cross-validation across 60 randomly sampled hyperparameter combinations, followed by data-driven decision-threshold calibration using Youden's J statistic.
 
-**Inference** — Uploaded CSV is preprocessed identically to training data. Vectorised `predict_proba` and SHAP in single numpy passes. Bulk DB insert via `bulk_insert_mappings`. Benchmarked at 2.1 seconds for 10,270 students.
+**Batch Inference** — Uploaded CSV files are processed using the same preprocessing pipeline used during training. Risk probabilities are computed through vectorised `predict_proba` calls, while SHAP values are calculated in batched NumPy operations. Prediction records are persisted using SQLAlchemy's `bulk_insert_mappings`. The pipeline was benchmarked at approximately **2.1 seconds for 10,270 student records**.
 
-**Explainability** — `shap.TreeExplainer` computes per-student feature contributions. Top 5 SHAP drivers returned per student and rendered as a colour-coded bar chart.
+**Explainability** — `shap.TreeExplainer` computes feature-level contributions for every student prediction. The five strongest SHAP drivers are returned for each student and displayed through colour-coded contribution charts.
 
-**Intervention** — Gemini 2.5 Flash receives the student's SHAP drivers, risk score, and rule-based flags to generate a structured 3-part intervention plan.
+**Intervention Generation** — For students identified as at risk, Gemini 2.5 Flash receives the student's predicted risk score, most influential SHAP drivers, and rule-based intervention flags to produce a structured three-part intervention plan.
 
 ---
 
-*Built for educational purposes*
+## Workflow
+
+```text
+Student CSV
+    │
+    ▼
+Preprocessing & Feature Engineering
+    │
+    ▼
+XGBoost Risk Prediction
+    │
+    ├──► SHAP Feature Attribution
+    │
+    ├──► Rule-Based Intervention Flags
+    │
+    ▼
+PostgreSQL Prediction History
+    │
+    ▼
+Faculty Dashboard
+    │
+    ├──► Cohort Analytics
+    ├──► Student-Level Explanations
+    ├──► Intervention Tracking
+    └──► Gemini-Generated Intervention Plans
+```
+
+---
+
+*Built for educational purposes.*
